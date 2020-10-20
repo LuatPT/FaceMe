@@ -4,8 +4,8 @@ import createHistory from 'history/createBrowserHistory';
 import './App.css';
 
 import Home from './views/Home';
-import ImageInput from './views/ImageInput';
 import VideoInput from './views/VideoInput';
+import InputContainer from './containers/InputContainer';
 import Input from './views/Input';
 
 class App extends Component {
@@ -16,7 +16,7 @@ class App extends Component {
           <div className="route">
             <Route exact path="/" component={Home} />
             <Route exact path="/input" component={Input} />
-            <Route exact path="/photo" component={ImageInput} />
+            <Route exact path="/photo" component={InputContainer} />
             <Route exact path="/camera" component={VideoInput} />
           </div>
         </Router>

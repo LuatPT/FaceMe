@@ -4,13 +4,17 @@
   "homepage": "http://supachaic.github.io/react-face-recognition",
   "private": true,
   "dependencies": {
-    "face-api.js": "^0.17.0",
+    "axios": "^0.20.0",
+    "face-api.js": "^0.22.2",
     "gh-pages": "^2.0.1",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
-    "react-router-dom": "^4.3.1",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-redux": "^7.2.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "2.1.2",
-    "react-webcam": "^1.0.4"
+    "react-webcam": "^5.2.1",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",

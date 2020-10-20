@@ -1,4 +1,4 @@
-const listCateReducer = (state = [], action) => {
+const listData = (state = [], action) => {
   switch (action.type) {
     case 'GET_DATA':
       return action.data
@@ -6,4 +6,4 @@ const listCateReducer = (state = [], action) => {
       return state
   }
 }
-export default listCateReducer
+export default listData

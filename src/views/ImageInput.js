@@ -4,7 +4,7 @@ import { loadModels, getFullFaceDescription, createMatcher } from '../api/face';
 import MyImage from './MyImage';
 
 // Import image to test API
-const testImg = require('../img/test.jpg');
+// const testImg = require('../img/test.jpg');
 
 // Import face profile
 const JSON_PROFILE = require('../descriptors/bnk48.json');
@@ -26,9 +26,13 @@ class ImageInput extends Component {
   }
 
   componentWillMount = async () => {
+    const { getData, listData } = this.props;
+    await getData.getDataAction();
+
     await loadModels();
+    console.log(listData);
     this.setState({ faceMatcher: await createMatcher(JSON_PROFILE) });
-    // await this.handleImage(this.state.imageURL);
+    await this.handleImage(this.state.imageURL);
   };
   changeInput = () => {
     this.setState({ imageURL: this.url.current.value });
@@ -68,7 +72,7 @@ class ImageInput extends Component {
   };
 
   render() {
-    const { imageURL, detections, match } = this.state;
+    const { detections, match } = this.state;
 
     let drawBox = null;
     if (!!detections) {
