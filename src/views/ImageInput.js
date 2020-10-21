@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { loadModels, getFullFaceDescription, createMatcher } from '../api/face';
 import MyImage from './MyImage';
 
+
 // Import image to test API
 // const testImg = require('../img/test.jpg');
 
@@ -21,18 +22,16 @@ const INIT_STATE = {
 class ImageInput extends Component {
   constructor(props) {
     super(props);
+    this.textInput = React.createRef();
     this.state = { ...INIT_STATE, faceMatcher: null };
     this.url = React.createRef();
   }
 
   componentWillMount = async () => {
-    const { getData, listData } = this.props;
-    await getData.getDataAction();
-
     await loadModels();
-    console.log(listData);
-    this.setState({ faceMatcher: await createMatcher(JSON_PROFILE) });
-    await this.handleImage(this.state.imageURL);
+    const { listData } = this.props;
+    this.setState({ faceMatcher: createMatcher(listData) });
+    // await this.handleImage(this.state.imageURL);
   };
   changeInput = () => {
     this.setState({ imageURL: this.url.current.value });
@@ -58,10 +57,12 @@ class ImageInput extends Component {
     }
   };
 
-  handleFileChange = async event => {
+  handleFileChange = async listData => {
+    console.log(listData);
+    this.setState({ faceMatcher: await createMatcher(listData) });
     this.resetState();
     await this.setState({
-      imageURL: URL.createObjectURL(event.target.files[0]),
+      imageURL: URL.createObjectURL(this.textInput.current.files[0]),
       loading: true
     });
     this.handleImage();
@@ -73,7 +74,7 @@ class ImageInput extends Component {
 
   render() {
     const { detections, match } = this.state;
-
+    const { listData } = this.props;
     let drawBox = null;
     if (!!detections) {
       drawBox = detections.map((detection, i) => {
@@ -119,7 +120,8 @@ class ImageInput extends Component {
         <input
           id="myFileUpload"
           type="file"
-          onChange={this.handleFileChange}
+          ref={this.textInput}
+          onChange={() => this.handleFileChange(listData)}
           accept=".jpg, .jpeg, .png"
         />
         <input type="text" ref={this.url} />

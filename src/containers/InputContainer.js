@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import * as getData from '../api/action/getDataAction';
 import { bindActionCreators } from 'redux';
-import ImageInput from '../views/ImageInput';
+import Detect from '../views/Detect';
 
 const mapStateToProps = (state) => ({
   listData: state.listData,
@@ -9,4 +9,4 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProp = (dispatch) => ({
   getData: bindActionCreators(getData, dispatch),
 });
-export default connect(mapStateToProps, mapDispatchToProp)(ImageInput);
+export default connect(mapStateToProps, mapDispatchToProp)(Detect);

@@ -6,6 +6,7 @@
   "dependencies": {
     "axios": "^0.20.0",
     "face-api.js": "^0.22.2",
+    "fs": "^0.0.1-security",
     "gh-pages": "^2.0.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
@@ -17,7 +18,7 @@
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=4000 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
