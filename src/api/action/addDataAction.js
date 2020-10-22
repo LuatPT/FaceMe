@@ -2,7 +2,7 @@ import axios from 'axios';
 export const addDataAction = (obj) => {
   return (dispatch) => {
     axios
-      .post('http://localhost:3002/inputdata', obj)
+      .post('http://localhost:3002/api/v1/inputdata', obj)
       .then((res) => {
         dispatch(addData(res.data));
         alert("Data have been added!")

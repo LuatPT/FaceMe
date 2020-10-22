@@ -24,12 +24,10 @@ class VideoInput extends Component {
     };
   }
 
-  componentWillMount = async () => {
-    await loadModels();
-    this.setState({ faceMatcher: await createMatcher(JSON_PROFILE) });
-    this.setInputDevice();
-  };
-
+  componentDidMount = () => {
+    const { listDataVideo } = this.props;
+    console.log(listDataVideo);
+  }
   setInputDevice = () => {
     navigator.mediaDevices.enumerateDevices().then(async devices => {
       let inputDevice = await devices.filter(
@@ -49,6 +47,7 @@ class VideoInput extends Component {
   };
 
   startCapture = () => {
+
     this.interval = setInterval(() => {
       this.capture();
     }, 1500);
@@ -81,8 +80,17 @@ class VideoInput extends Component {
     }
   };
 
+  startDetectVideo = async (listDataVideo) => {
+
+    await loadModels();
+    this.setState({ faceMatcher: await createMatcher(listDataVideo) });
+    this.setInputDevice();
+
+    console.log(listDataVideo);
+  }
   render() {
     const { detections, match, facingMode } = this.state;
+    const { listDataVideo } = this.props;
     let videoConstraints = null;
     let camera = '';
     if (!!facingMode) {
@@ -139,6 +147,7 @@ class VideoInput extends Component {
     }
 
     return (
+
       <div
         className="Camera"
         style={{
@@ -147,6 +156,7 @@ class VideoInput extends Component {
           alignItems: 'center'
         }}
       >
+        <button onClick={() => this.startDetectVideo(listDataVideo)}>Start Detect</button>
         <p>Camera: {camera}</p>
         <div
           style={{

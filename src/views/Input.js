@@ -10,11 +10,12 @@ const JSON_PROFILE = require('../descriptors/bnk48.json');
 
 // Initial State
 const INIT_STATE = {
-  imageURL: testImg,
+  imageURL: null,
   fullDesc: null,
   detections: null,
   descriptors: null,
-  match: null
+  match: null,
+  name: null
 };
 
 class Input extends Component {
@@ -25,10 +26,17 @@ class Input extends Component {
 
   componentWillMount = async () => {
     await loadModels();
-    this.setState({ faceMatcher: await createMatcher(JSON_PROFILE) });
-    await this.handleImage(this.state.imageURL);
   };
 
+  addData = () => {
+    const { addData } = this.props;
+    var desc = this.state.fullDesc[0].descriptor;
+    var name = this.state.name;
+    if (desc != null && name != null) {
+      addData.addDataAction({ name: name, descriptor: desc.toString() });
+    }
+
+  }
   handleImage = async (image = this.state.imageURL) => {
     await getFullFaceDescription(image).then(fullDesc => {
       console.log(fullDesc[0]);
@@ -107,6 +115,8 @@ class Input extends Component {
 
     return (
       <div>
+        <button onClick={() => this.addData()}>Add Data</button>
+        <input type="text" onChange={(eve) => this.setState({ name: eve.target.value })} />
         <input
           id="myFileUpload"
           type="file"
@@ -119,6 +129,7 @@ class Input extends Component {
           </div>
           {!!drawBox ? drawBox : null}
         </div>
+
       </div>
     );
   }

@@ -4,9 +4,9 @@ import createHistory from 'history/createBrowserHistory';
 import './App.css';
 
 import Home from './views/Home';
-import VideoInput from './views/VideoInput';
 import InputContainer from './containers/InputContainer';
-import Input from './views/Input';
+import VideoContainer from './containers/VideoContainer';
+import AddInputContainer from './containers/AddInputContainer';
 
 class App extends Component {
   render() {
@@ -15,9 +15,9 @@ class App extends Component {
         <Router history={createHistory({ basename: process.env.PUBLIC_URL })}>
           <div className="route">
             <Route exact path="/" component={Home} />
-            <Route exact path="/input" component={Input} />
+            <Route exact path="/input" component={AddInputContainer} />
             <Route exact path="/photo" component={InputContainer} />
-            <Route exact path="/camera" component={VideoInput} />
+            <Route exact path="/camera" component={VideoContainer} />
           </div>
         </Router>
       </div>

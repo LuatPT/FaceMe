@@ -37,6 +37,7 @@ class ImageInput extends Component {
     this.setState({ imageURL: this.url.current.value });
   }
 
+
   handleImage = async (image = this.state.imageURL) => {
     await getFullFaceDescription(image).then(fullDesc => {
       console.log(fullDesc);
@@ -58,7 +59,6 @@ class ImageInput extends Component {
   };
 
   handleFileChange = async listData => {
-    console.log(listData);
     this.setState({ faceMatcher: await createMatcher(listData) });
     this.resetState();
     await this.setState({
