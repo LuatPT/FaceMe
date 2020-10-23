@@ -32,10 +32,15 @@ class Input extends Component {
     const { addData } = this.props;
     var desc = this.state.fullDesc[0].descriptor;
     var name = this.state.name;
+    console.log(name);
     if (desc != null && name != null) {
+      console.log("da vao action");
       addData.addDataAction({ name: name, descriptor: desc.toString() });
     }
 
+  }
+  changeNameInput = (eve) => {
+    this.setState({ name: eve.target.value })
   }
   handleImage = async (image = this.state.imageURL) => {
     await getFullFaceDescription(image).then(fullDesc => {
@@ -58,7 +63,7 @@ class Input extends Component {
   };
 
   handleFileChange = async event => {
-    this.resetState();
+    // this.resetState();
     await this.setState({
       imageURL: URL.createObjectURL(event.target.files[0]),
       loading: true
@@ -116,7 +121,7 @@ class Input extends Component {
     return (
       <div>
         <button onClick={() => this.addData()}>Add Data</button>
-        <input type="text" onChange={(eve) => this.setState({ name: eve.target.value })} />
+        <input type="text" onChange={this.changeNameInput} />
         <input
           id="myFileUpload"
           type="file"

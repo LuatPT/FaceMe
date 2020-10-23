@@ -35,6 +35,7 @@ class ImageInput extends Component {
   };
   changeInput = () => {
     this.setState({ imageURL: this.url.current.value });
+    this.handleFileChange();
   }
 
 
