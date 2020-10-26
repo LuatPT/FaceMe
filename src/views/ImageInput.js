@@ -16,9 +16,49 @@ const INIT_STATE = {
   fullDesc: null,
   detections: null,
   descriptors: null,
-  match: null
+  match: null,
+  emotion: null
 };
 
+function findEmotion(input) {
+  var arr = [
+    input.angry,
+    input.disgusted,
+    input.fearful,
+    input.happy,
+    input.neutral,
+    input.sad,
+    input.surprised
+  ];
+  var maxEmo = Math.max(...arr);
+  var flag = null;
+  switch (maxEmo) {
+    case input.angry:
+      flag = "Giận dữ";
+      break;
+    case input.fearful:
+      flag = "Sợ hãi";
+      break;
+    case input.disgusted:
+      flag = "Ghê tởm";
+      break;
+    case input.happy:
+      flag = "Vui vẻ";
+      break;
+    case input.neutral:
+      flag = "Bình thường";
+      break;
+    case input.sad:
+      flag = "Buồn";
+      break;
+    case input.surprised:
+      flag = "Ngạc nhiên";
+      break;
+    default:
+      break;
+  }
+  return flag
+}
 class ImageInput extends Component {
   constructor(props) {
     super(props);
@@ -38,15 +78,24 @@ class ImageInput extends Component {
     this.handleFileChange();
   }
 
-
   handleImage = async (image = this.state.imageURL) => {
     await getFullFaceDescription(image).then(fullDesc => {
-      console.log(fullDesc);
+      // console.log(fullDesc);
+
       if (!!fullDesc) {
+        var emotionMe = findEmotion(fullDesc[0].expressions)
+        // 1 angry
+        // 2 disgusted
+        // 3 fearful
+        // 4 happy
+        // 5 neutral
+        // 6 sad
+        // 7 surprised
         this.setState({
           fullDesc,
           detections: fullDesc.map(fd => fd.detection),
-          descriptors: fullDesc.map(fd => fd.descriptor)
+          descriptors: fullDesc.map(fd => fd.descriptor),
+          emotion: emotionMe
         });
       }
     });
@@ -61,7 +110,7 @@ class ImageInput extends Component {
 
   handleFileChange = async listData => {
     this.setState({ faceMatcher: await createMatcher(listData) });
-    this.resetState();
+    // this.resetState();
     await this.setState({
       imageURL: URL.createObjectURL(this.textInput.current.files[0]),
       loading: true
@@ -76,6 +125,7 @@ class ImageInput extends Component {
   render() {
     const { detections, match } = this.state;
     const { listData } = this.props;
+    console.log(this.state.emotion);
     let drawBox = null;
     if (!!detections) {
       drawBox = detections.map((detection, i) => {
@@ -83,6 +133,7 @@ class ImageInput extends Component {
         let _W = detection.box.width;
         let _X = detection.box._x;
         let _Y = detection.box._y;
+
         return (
           <div key={i}>
             <div
@@ -108,6 +159,7 @@ class ImageInput extends Component {
                   }}
                 >
                   {match[i]._label}
+                  {this.state.emotion}
                 </p>
               ) : null}
             </div>
