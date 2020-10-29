@@ -17,7 +17,10 @@ const INIT_STATE = {
   detections: null,
   descriptors: null,
   match: null,
-  emotion: null
+  emotion: null,
+  age: null,
+  gender: null,
+  errorStatus: false
 };
 
 function findEmotion(input) {
@@ -73,16 +76,22 @@ class ImageInput extends Component {
     this.setState({ faceMatcher: createMatcher(listData) });
     // await this.handleImage(this.state.imageURL);
   };
-  changeInput = () => {
-    this.setState({ imageURL: this.url.current.value });
-    this.handleFileChange();
+  changeInput = async (listData) => {
+    this.setState({ faceMatcher: await createMatcher(listData) });
+    // this.resetState();
+    await this.setState({
+      imageURL: this.url.current.value,
+      loading: true
+    });
+    this.handleImage();
   }
 
   handleImage = async (image = this.state.imageURL) => {
+    this.setState({ fullDesc: 1 })
     await getFullFaceDescription(image).then(fullDesc => {
-      // console.log(fullDesc);
+      console.log(fullDesc);
 
-      if (!!fullDesc) {
+      if (fullDesc !== null && fullDesc !== undefined && fullDesc.length !== 0) {
         var emotionMe = findEmotion(fullDesc[0].expressions)
         // 1 angry
         // 2 disgusted
@@ -95,8 +104,12 @@ class ImageInput extends Component {
           fullDesc,
           detections: fullDesc.map(fd => fd.detection),
           descriptors: fullDesc.map(fd => fd.descriptor),
-          emotion: emotionMe
+          emotion: emotionMe,
+          age: fullDesc[0].age,
+          gender: fullDesc[0].gender
         });
+      } else {
+        this.setState({ errorStatus: true })
       }
     });
 
@@ -125,7 +138,6 @@ class ImageInput extends Component {
   render() {
     const { detections, match } = this.state;
     const { listData } = this.props;
-    console.log(this.state.emotion);
     let drawBox = null;
     if (!!detections) {
       drawBox = detections.map((detection, i) => {
@@ -147,20 +159,22 @@ class ImageInput extends Component {
               }}
             >
               {!!match ? (
-                <p
-                  style={{
-                    backgroundColor: 'blue',
-                    border: 'solid',
-                    borderColor: 'blue',
-                    width: _W,
-                    marginTop: 0,
-                    color: '#fff',
-                    transform: `translate(-3px,${_H}px)`
-                  }}
-                >
-                  {match[i]._label}
-                  {this.state.emotion}
-                </p>
+                <div>
+                  <p
+                    style={{
+                      backgroundColor: 'blue',
+                      border: 'solid',
+                      borderColor: 'blue',
+                      width: _W,
+                      marginTop: 0,
+                      color: '#fff',
+                      transform: `translate(-3px,${_H}px)`
+                    }}
+                  >
+                    {this.state.fullDesc !== 1 ? match[i]._label : "Unknown"}-{Math.floor(this.state.age)} tuổi-{this.state.gender}-{this.state.emotion}
+                  </p>
+                </div>
+
               ) : null}
             </div>
           </div>
@@ -170,6 +184,8 @@ class ImageInput extends Component {
 
     return (
       <div>
+        <h2>{this.state.errorStatus == true ? "The imported images must be of good resolution " : ""}</h2>
+        <h2>{this.state.fullDesc === 1 ? "Loading" : ""}</h2>
         <input
           id="myFileUpload"
           type="file"
@@ -178,7 +194,7 @@ class ImageInput extends Component {
           accept=".jpg, .jpeg, .png"
         />
         <input type="text" ref={this.url} />
-        <button onClick={() => this.changeInput()}>Ok</button>
+        <button onClick={() => this.changeInput(listData)}>Ok</button>
         <MyImage drawBox={drawBox} imageURL={this.state.imageURL} />
       </div>
     );

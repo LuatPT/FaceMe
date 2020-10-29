@@ -6,7 +6,7 @@ import { loadModels, getFullFaceDescription, createMatcher } from '../api/face';
 const testImg = require('../img/test.jpg');
 
 // Import face profile
-const JSON_PROFILE = require('../descriptors/bnk48.json');
+// const JSON_PROFILE = require('../descriptors/bnk48.json');
 
 // Initial State
 const INIT_STATE = {
@@ -15,7 +15,8 @@ const INIT_STATE = {
   detections: null,
   descriptors: null,
   match: null,
-  name: null
+  name: null,
+  errorStatus: false
 };
 
 class Input extends Component {
@@ -25,6 +26,7 @@ class Input extends Component {
   }
 
   componentWillMount = async () => {
+    //Load model first ready to detect
     await loadModels();
   };
 
@@ -32,9 +34,8 @@ class Input extends Component {
     const { addData } = this.props;
     var desc = this.state.fullDesc[0].descriptor;
     var name = this.state.name;
-    console.log(name);
     if (desc != null && name != null) {
-      console.log("da vao action");
+      // Insert data to db
       addData.addDataAction({ name: name, descriptor: desc.toString() });
     }
 
@@ -44,13 +45,14 @@ class Input extends Component {
   }
   handleImage = async (image = this.state.imageURL) => {
     await getFullFaceDescription(image).then(fullDesc => {
-      console.log(fullDesc[0]);
-      if (!!fullDesc) {
+      if (fullDesc !== null && fullDesc !== undefined && fullDesc.length !== 0) {
         this.setState({
           fullDesc,
           detections: fullDesc.map(fd => fd.detection),
           descriptors: fullDesc.map(fd => fd.descriptor)
         });
+      } else {
+        this.setState({ errorStatus: true })
       }
     });
 
@@ -120,14 +122,14 @@ class Input extends Component {
 
     return (
       <div>
-        <button onClick={() => this.addData()}>Add Data</button>
-        <input type="text" onChange={this.changeNameInput} />
+        <input type="text" placeholder="Please type name..." onChange={this.changeNameInput} /><br />
         <input
           id="myFileUpload"
           type="file"
           onChange={this.handleFileChange}
           accept=".jpg, .jpeg, .png"
-        />
+        /><br />
+        <button onClick={() => this.addData()}>Add Data</button>
         <div style={{ position: 'relative' }}>
           <div style={{ position: 'absolute' }}>
             <img src={imageURL} alt="imageURL" />

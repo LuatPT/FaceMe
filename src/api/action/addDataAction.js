@@ -6,6 +6,7 @@ export const addDataAction = (obj) => {
       .post('http://localhost:3002/api/v1/inputdata', obj)
       .then((res) => {
         dispatch(addData(res))
+        alert("Add Input succesfully")
       })
       .catch((err) => console.log(err));
   };

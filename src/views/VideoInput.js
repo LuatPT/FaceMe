@@ -10,6 +10,45 @@ const WIDTH = 420;
 const HEIGHT = 420;
 const inputSize = 160;
 
+function findEmotion(input) {
+  var arr = [
+    input.angry,
+    input.disgusted,
+    input.fearful,
+    input.happy,
+    input.neutral,
+    input.sad,
+    input.surprised
+  ];
+  var maxEmo = Math.max(...arr);
+  var flag = null;
+  switch (maxEmo) {
+    case input.angry:
+      flag = "Giận dữ";
+      break;
+    case input.fearful:
+      flag = "Sợ hãi";
+      break;
+    case input.disgusted:
+      flag = "Ghê tởm";
+      break;
+    case input.happy:
+      flag = "Vui vẻ";
+      break;
+    case input.neutral:
+      flag = "Bình thường";
+      break;
+    case input.sad:
+      flag = "Buồn";
+      break;
+    case input.surprised:
+      flag = "Ngạc nhiên";
+      break;
+    default:
+      break;
+  }
+  return flag
+}
 class VideoInput extends Component {
   constructor(props) {
     super(props);
@@ -20,7 +59,10 @@ class VideoInput extends Component {
       descriptors: null,
       faceMatcher: null,
       match: null,
-      facingMode: null
+      facingMode: null,
+      emotion: null,
+      age: null,
+      gender: null
     };
   }
 
@@ -63,10 +105,21 @@ class VideoInput extends Component {
         this.webcam.current.getScreenshot(),
         inputSize
       ).then(fullDesc => {
-        if (!!fullDesc) {
+        if (fullDesc !== null && fullDesc !== undefined && fullDesc.length !== 0) {
+          var emotionMe = findEmotion(fullDesc[0].expressions)
+          // 1 angry
+          // 2 disgusted
+          // 3 fearful
+          // 4 happy
+          // 5 neutral
+          // 6 sad
+          // 7 surprised
           this.setState({
             detections: fullDesc.map(fd => fd.detection),
-            descriptors: fullDesc.map(fd => fd.descriptor)
+            descriptors: fullDesc.map(fd => fd.descriptor),
+            emotion: emotionMe,
+            age: fullDesc[0].age,
+            gender: fullDesc[0].gender
           });
         }
       });
@@ -137,7 +190,7 @@ class VideoInput extends Component {
                     transform: `translate(-3px,${_H}px)`
                   }}
                 >
-                  {match[i]._label}
+                  {match[i]._label}-{Math.floor(this.state.age)} tuổi-{this.state.gender}-{this.state.emotion}
                 </p>
               ) : null}
             </div>
