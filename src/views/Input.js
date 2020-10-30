@@ -16,27 +16,62 @@ const INIT_STATE = {
   descriptors: null,
   match: null,
   name: null,
-  errorStatus: false
+  errorStatus: false,
+  listData: []
 };
 
 class Input extends Component {
   constructor(props) {
     super(props);
+    this.textInput = React.createRef();
     this.state = { ...INIT_STATE, faceMatcher: null };
   }
 
   componentWillMount = async () => {
+    const { getData } = this.props;
     //Load model first ready to detect
+    await getData.getDataAction();
     await loadModels();
+
   };
 
   addData = () => {
-    const { addData } = this.props;
+    const { addData, updateData } = this.props;
+    console.log(this.state.listData);
+    const list = Object.values(this.state.listData);
+
     var desc = this.state.fullDesc[0].descriptor;
     var name = this.state.name;
-    if (desc != null && name != null) {
+    console.log(list);
+    if (desc != null && name != null && list.length > 0) {
+      list.map(ele => {
+        console.log(ele);
+        // If data is exist . Do Update
+        if (ele.name == name) {
+          console.log("Vao");
+          // position will be update
+          let positionUpdate = 1;
+          // Do loop to find position will be update
+          console.log("vo update");
+          for (let i = 1; i <= 8; i++) {
+            var data1 = "data_item" + i;
+            var data2 = "data_item" + (i + 1);
+            console.log(data1 + data2);
+            if (ele.data1.localeCompare(ele.data2) == 0) {
+              positionUpdate = i + 1;
+              break;
+            } else {
+              continue;
+            }
+          }
+          updateData.updateData({ name: ele.data_id, descriptor: desc.toString(), position: positionUpdate })
+        }
+        addData.addDataAction({ name: name, descriptor: desc.toString() });
+      }
+
+      )
       // Insert data to db
-      addData.addDataAction({ name: name, descriptor: desc.toString() });
+
     }
 
   }
@@ -64,11 +99,13 @@ class Input extends Component {
     }
   };
 
-  handleFileChange = async event => {
+  handleFileChange = async list => {
     // this.resetState();
+
     await this.setState({
-      imageURL: URL.createObjectURL(event.target.files[0]),
-      loading: true
+      imageURL: URL.createObjectURL(this.textInput.current.files[0]),
+      loading: true,
+      listData: list
     });
     this.handleImage();
   };
@@ -79,7 +116,7 @@ class Input extends Component {
 
   render() {
     const { imageURL, detections, match } = this.state;
-
+    const { listData } = this.props;
     let drawBox = null;
     if (!!detections) {
       drawBox = detections.map((detection, i) => {
@@ -126,7 +163,8 @@ class Input extends Component {
         <input
           id="myFileUpload"
           type="file"
-          onChange={this.handleFileChange}
+          ref={this.textInput}
+          onChange={() => this.handleFileChange(listData)}
           accept=".jpg, .jpeg, .png"
         /><br />
         <button onClick={() => this.addData()}>Add Data</button>

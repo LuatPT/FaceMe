@@ -8,7 +8,7 @@ import MyImage from './MyImage';
 // const testImg = require('../img/test.jpg');
 
 // Import face profile
-const JSON_PROFILE = require('../descriptors/bnk48.json');
+// const JSON_PROFILE = require('../descriptors/bnk48.json');
 
 // Initial State
 const INIT_STATE = {
