@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import VideoInput from './VideoInput';
 class VideoDetect extends Component {
   componentDidMount = () => {
-    const { getDataVideo, listDataVideo } = this.props;
+    const { getDataVideo } = this.props;
     getDataVideo.getDataAction();
   }
 

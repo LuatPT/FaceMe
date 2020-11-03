@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { loadModels, getFullFaceDescription, createMatcher } from '../api/face';
+import { loadModels, getFullFaceDescription } from '../api/face';
 
-// Import image to test API
-const testImg = require('../img/test.jpg');
-
-// Import face profile
-// const JSON_PROFILE = require('../descriptors/bnk48.json');
 
 // Initial State
 const INIT_STATE = {
@@ -37,50 +32,55 @@ class Input extends Component {
 
   addData = () => {
     const { addData, updateData } = this.props;
-    console.log(this.state.listData);
     const list = Object.values(this.state.listData);
-
     var desc = this.state.fullDesc[0].descriptor;
     var name = this.state.name;
-    console.log(list);
-    if (desc != null && name != null && list.length > 0) {
+    let nameUpdate, positionUpdateMe, oldDesc;
+    let isUpdate = false;
+
+    if (desc !== null && name !== null && list.length > 0) {
       list.map(ele => {
-        console.log(ele);
         // If data is exist . Do Update
-        if (ele.name == name) {
-          console.log("Vao");
+        if (ele.name === name) {
           // position will be update
           let positionUpdate = 1;
           // Do loop to find position will be update
-          console.log("vo update");
-          for (let i = 1; i <= 8; i++) {
-            var data1 = "data_item" + i;
-            var data2 = "data_item" + (i + 1);
-            console.log(data1 + data2);
-            if (ele.data1.localeCompare(ele.data2) == 0) {
-              positionUpdate = i + 1;
+          for (let i = 0; i <= 7; i++) {
+            console.log(ele);
+            if (ele.descriptors[i].toString().localeCompare(ele.descriptors[i + 1].toString()) === 0) {
+              positionUpdate = i + 2;
+              oldDesc = ele.descriptors[i];
               break;
             } else {
               continue;
             }
           }
-          updateData.updateData({ name: ele.data_id, descriptor: desc.toString(), position: positionUpdate })
+          isUpdate = true;
+          nameUpdate = ele.name;
+          positionUpdateMe = positionUpdate;
+
         }
+
+      })
+      if (isUpdate === true) {
+        updateData.updateDataAction({ name: nameUpdate, descriptor: desc.toString(), position: positionUpdateMe, oldDesc: oldDesc })
+      } else {
         addData.addDataAction({ name: name, descriptor: desc.toString() });
+        // Insert data to db
       }
-
-      )
-      // Insert data to db
-
     }
+
 
   }
   changeNameInput = (eve) => {
     this.setState({ name: eve.target.value })
   }
   handleImage = async (image = this.state.imageURL) => {
+    document.getElementById("loader").style.display = "block";
     await getFullFaceDescription(image).then(fullDesc => {
       if (fullDesc !== null && fullDesc !== undefined && fullDesc.length !== 0) {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("myDiv").style.display = "block";
         this.setState({
           fullDesc,
           detections: fullDesc.map(fd => fd.detection),
@@ -101,7 +101,6 @@ class Input extends Component {
 
   handleFileChange = async list => {
     // this.resetState();
-
     await this.setState({
       imageURL: URL.createObjectURL(this.textInput.current.files[0]),
       loading: true,
@@ -113,7 +112,6 @@ class Input extends Component {
   resetState = () => {
     this.setState({ ...INIT_STATE });
   };
-
   render() {
     const { imageURL, detections, match } = this.state;
     const { listData } = this.props;
@@ -158,7 +156,13 @@ class Input extends Component {
     }
 
     return (
+
       <div>
+        <div id="loader"></div>
+        <div id="myDiv" className="animate-bottom">
+          <h2>Tada!</h2>
+          <p>Loading Complete 100%!!!</p>
+        </div>
         <input type="text" placeholder="Please type name..." onChange={this.changeNameInput} /><br />
         <input
           id="myFileUpload"

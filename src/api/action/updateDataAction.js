@@ -3,7 +3,7 @@ export const updateDataAction = (obj) => {
   console.log(obj);
   return (dispatch) => {
     axios
-      .put('http://localhost:3002/api/v1/inputdata/' + obj.data_id, obj)
+      .put('http://localhost:3002/api/v1/inputdata/' + obj.name, obj)
       .then((res) => {
         dispatch(updateData(res))
         alert("Update Input succesfully")

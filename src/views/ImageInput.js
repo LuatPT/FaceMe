@@ -87,11 +87,12 @@ class ImageInput extends Component {
   }
 
   handleImage = async (image = this.state.imageURL) => {
-    this.setState({ fullDesc: 1 })
+    document.getElementById("loader").style.display = "block";
     await getFullFaceDescription(image).then(fullDesc => {
       console.log(fullDesc);
-
       if (fullDesc !== null && fullDesc !== undefined && fullDesc.length !== 0) {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("myDiv").style.display = "block";
         var emotionMe = findEmotion(fullDesc[0].expressions)
         // 1 angry
         // 2 disgusted
@@ -184,8 +185,13 @@ class ImageInput extends Component {
 
     return (
       <div>
-        <h2>{this.state.errorStatus == true ? "The imported images must be of good resolution " : ""}</h2>
-        <h2>{this.state.fullDesc === 1 ? "Loading" : ""}</h2>
+
+        <div id="loader">Loading</div>
+        <div id="myDiv" className="animate-bottom">
+          <h2>Tada!</h2>
+          <p>Loading Complete 100%!!!</p>
+        </div>
+        <h2>{this.state.errorStatus === true ? "The imported images must be of good resolution " : ""}</h2>
         <input
           id="myFileUpload"
           type="file"
