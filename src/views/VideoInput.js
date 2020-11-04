@@ -209,7 +209,7 @@ class VideoInput extends Component {
           alignItems: 'center'
         }}
       >
-        <button onClick={() => this.startDetectVideo(listDataVideo)}>Start Detect</button>
+        <button onClick={() => this.startDetectVideo(listDataVideo)} type="button" class="btn btn-outline-success">Start Detect</button>
         <p>Camera: {camera}</p>
         <div
           style={{

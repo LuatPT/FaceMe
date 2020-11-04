@@ -146,9 +146,9 @@ class ImageInput extends Component {
         let _W = detection.box.width;
         let _X = detection.box._x;
         let _Y = detection.box._y;
-
+        console.log(match);
         return (
-          <div key={i}>
+          <div key={i} >
             <div
               style={{
                 position: 'absolute',
@@ -172,12 +172,13 @@ class ImageInput extends Component {
                       transform: `translate(-3px,${_H}px)`
                     }}
                   >
-                    {this.state.fullDesc !== 1 ? match[i]._label : "Unknown"}-{Math.floor(this.state.age)} tuổi-{this.state.gender}-{this.state.emotion}
+                    {match[i]._label}-{Math.floor(this.state.age)} tuổi-{this.state.gender}-{this.state.emotion}
                   </p>
                 </div>
 
               ) : null}
             </div>
+
           </div>
         );
       });
@@ -192,15 +193,15 @@ class ImageInput extends Component {
           <p>Loading Complete 100%!!!</p>
         </div>
         <h2>{this.state.errorStatus === true ? "The imported images must be of good resolution " : ""}</h2>
-        <input
-          id="myFileUpload"
-          type="file"
-          ref={this.textInput}
-          onChange={() => this.handleFileChange(listData)}
-          accept=".jpg, .jpeg, .png"
-        />
-        <input type="text" ref={this.url} />
-        <button onClick={() => this.changeInput(listData)}>Ok</button>
+        <input type="text" ref={this.url} placeholder="Type your name..." />
+        <div class="button-wrapper">
+          <span class="label">
+            Upload File
+          </span>
+          <input type="file" ref={this.textInput} name="upload" id="upload" className="upload-box" placeholder="Upload File" onChange={() => this.handleFileChange(listData)} accept=".jpg, .jpeg, .png" />
+        </div>
+
+        <button type="button" class="btn btn-outline-success" onClick={() => this.changeInput(listData)}>Ok</button>
         <MyImage drawBox={drawBox} imageURL={this.state.imageURL} />
       </div>
     );

@@ -48,7 +48,7 @@ class Input extends Component {
           for (let i = 0; i <= 7; i++) {
             console.log(ele);
             if (ele.descriptors[i].toString().localeCompare(ele.descriptors[i + 1].toString()) === 0) {
-              positionUpdate = i + 2;
+              positionUpdate = i + 1;
               oldDesc = ele.descriptors[i];
               break;
             } else {
@@ -158,20 +158,19 @@ class Input extends Component {
     return (
 
       <div>
-        <div id="loader"></div>
+        <div id="loader">Loading</div>
         <div id="myDiv" className="animate-bottom">
           <h2>Tada!</h2>
           <p>Loading Complete 100%!!!</p>
         </div>
         <input type="text" placeholder="Please type name..." onChange={this.changeNameInput} /><br />
-        <input
-          id="myFileUpload"
-          type="file"
-          ref={this.textInput}
-          onChange={() => this.handleFileChange(listData)}
-          accept=".jpg, .jpeg, .png"
-        /><br />
-        <button onClick={() => this.addData()}>Add Data</button>
+        <div class="button-wrapper">
+          <span class="label">
+            Upload File
+          </span>
+          <input type="file" ref={this.textInput} name="upload" id="upload" className="upload-box" placeholder="Upload File" onChange={() => this.handleFileChange(listData)} accept=".jpg, .jpeg, .png" />
+        </div>
+        <button onClick={() => this.addData()} type="button" class="btn btn-outline-success">Add Data</button>
         <div style={{ position: 'relative' }}>
           <div style={{ position: 'absolute' }}>
             <img src={imageURL} alt="imageURL" />
