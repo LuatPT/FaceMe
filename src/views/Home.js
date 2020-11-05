@@ -4,17 +4,19 @@ import { Link } from 'react-router-dom';
 export default class Home extends Component {
   render() {
     return (
-      <div>
+      <div >
         <h2>Facial Recognition</h2>
-        <li>
-          <Link to="/input">Input Data To Train Model</Link>
-        </li>
-        <li>
-          <Link to="/photo">Detect Photo</Link>
-        </li>
-        <li>
-          <Link to="/camera">Detect Video</Link>
-        </li>
+        <ul class="list-group" >
+          <li class="list-group-item">
+            <Link to="/input">Input Data To Train Model</Link>
+          </li>
+          <li class="list-group-item">
+            <Link to="/photo">Detect Photo</Link>
+          </li>
+          <li class="list-group-item">
+            <Link to="/camera">Detect Video</Link>
+          </li>
+        </ul>
       </div>
     );
   }

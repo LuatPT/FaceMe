@@ -193,7 +193,8 @@ class ImageInput extends Component {
           <p>Loading Complete 100%!!!</p>
         </div>
         <h2>{this.state.errorStatus === true ? "The imported images must be of good resolution " : ""}</h2>
-        <input type="text" ref={this.url} placeholder="Type your name..." />
+        <input type="text" ref={this.url} placeholder="Type your url..." />
+        <button type="button" class="btn btn-outline-success" onClick={() => this.changeInput(listData)}>Display Image</button>
         <div class="button-wrapper">
           <span class="label">
             Upload File
@@ -201,7 +202,7 @@ class ImageInput extends Component {
           <input type="file" ref={this.textInput} name="upload" id="upload" className="upload-box" placeholder="Upload File" onChange={() => this.handleFileChange(listData)} accept=".jpg, .jpeg, .png" />
         </div>
 
-        <button type="button" class="btn btn-outline-success" onClick={() => this.changeInput(listData)}>Ok</button>
+
         <MyImage drawBox={drawBox} imageURL={this.state.imageURL} />
       </div>
     );

@@ -5,7 +5,7 @@ export default class MyImage extends Component {
     const { imageURL, drawBox } = this.props;
     // console.log(listData);
     return (
-      <div style={{ position: 'relative' }}>
+      <div style={{ position: 'relative' }} >
         <div style={{ position: 'absolute' }}>
           <img src={imageURL} alt="imageURL" />
         </div>

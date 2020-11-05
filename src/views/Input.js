@@ -163,6 +163,7 @@ class Input extends Component {
           <h2>Tada!</h2>
           <p>Loading Complete 100%!!!</p>
         </div>
+        <h2>More file input, More exactly...</h2>
         <input type="text" placeholder="Please type name..." onChange={this.changeNameInput} /><br />
         <div class="button-wrapper">
           <span class="label">
