@@ -1,7 +1,7 @@
 {
-  "name": "react-face-recognition",
+  "name": "faceme",
   "version": "0.1.0",
-  "homepage": "http://supachaic.github.io/react-face-recognition",
+  "homepage": "index.html",
   "private": true,
   "dependencies": {
     "axios": "^0.20.0",
