@@ -76,6 +76,7 @@ class ImageInput extends Component {
     this.setState({ faceMatcher: createMatcher(listData) });
     // await this.handleImage(this.state.imageURL);
   };
+    // Upload by type url
   changeInput = async (listData) => {
     this.setState({ faceMatcher: await createMatcher(listData) });
     // this.resetState();
@@ -87,7 +88,9 @@ class ImageInput extends Component {
   }
 
   handleImage = async (image = this.state.imageURL) => {
+    //Dispplay loading
     document.getElementById("loader").style.display = "block";
+
     await getFullFaceDescription(image).then(fullDesc => {
       console.log(fullDesc);
       if (fullDesc !== null && fullDesc !== undefined && fullDesc.length !== 0) {
@@ -121,17 +124,16 @@ class ImageInput extends Component {
       this.setState({ match });
     }
   };
-
-  handleFileChange = async listData => {
+  // Upload by choose file
+  handleFileChange = async (listData) => {
     this.setState({ faceMatcher: await createMatcher(listData) });
-    // this.resetState();
+    // from an input element
     await this.setState({
       imageURL: URL.createObjectURL(this.textInput.current.files[0]),
       loading: true
     });
     this.handleImage();
-  };
-
+  }
   resetState = () => {
     this.setState({ ...INIT_STATE });
   };
@@ -146,7 +148,6 @@ class ImageInput extends Component {
         let _W = detection.box.width;
         let _X = detection.box._x;
         let _Y = detection.box._y;
-        console.log(match);
         return (
           <div key={i} >
             <div
@@ -176,7 +177,17 @@ class ImageInput extends Component {
                   </p>
                 </div>
 
-              ) : null}
+              ) : <p
+                    style={{
+                      backgroundColor: 'blue',
+                      border: 'solid',
+                      borderColor: 'blue',
+                      width: _W,
+                      marginTop: 0,
+                      color: '#fff',
+                      transform: `translate(-3px,${_H}px)`
+                    }}
+                  >OK deo co gi</p>}
             </div>
 
           </div>
@@ -194,16 +205,17 @@ class ImageInput extends Component {
         </div>
         <h2>{this.state.errorStatus === true ? "The imported images must be of good resolution " : ""}</h2>
         <input type="text" ref={this.url} placeholder="Type your url..." />
-        <button type="button" class="btn btn-outline-success" onClick={() => this.changeInput(listData)}>Display Image</button>
-        <div class="button-wrapper">
-          <span class="label">
+        <button type="button" className="btn btn-outline-success" onClick={() => this.changeInput(listData)}>Display Image</button>
+        <div className="button-wrapper">
+          <span className="label">
             Upload File
           </span>
           <input type="file" ref={this.textInput} name="upload" id="upload" className="upload-box" placeholder="Upload File" onChange={() => this.handleFileChange(listData)} accept=".jpg, .jpeg, .png" />
         </div>
 
-
-        <MyImage drawBox={drawBox} imageURL={this.state.imageURL} />
+        <div className="imageWrapper">
+           <MyImage drawBox={drawBox} imageURL={this.state.imageURL} />
+        </div>
       </div>
     );
   }

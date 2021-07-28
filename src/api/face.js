@@ -28,7 +28,9 @@ export async function getFullFaceDescription(detectItem, inputSize = 512) {
     .withFaceExpressions()
     .withAgeAndGender()
     .withFaceDescriptors();
-  return fullDesc;
+    
+  const displaySize = { width: 300, height: 300 };
+  return faceapi.resizeResults(fullDesc, displaySize);;
 }
 
 const maxDescriptorDistance = 0.5;

@@ -46,7 +46,6 @@ class Input extends Component {
           let positionUpdate = 1;
           // Do loop to find position will be update
           for (let i = 0; i <= 7; i++) {
-            console.log(ele);
             if (ele.descriptors[i].toString().localeCompare(ele.descriptors[i + 1].toString()) === 0) {
               positionUpdate = i + 1;
               oldDesc = ele.descriptors[i];
@@ -58,7 +57,6 @@ class Input extends Component {
           isUpdate = true;
           nameUpdate = ele.name;
           positionUpdateMe = positionUpdate;
-
         }
 
       })
@@ -172,9 +170,9 @@ class Input extends Component {
           <input type="file" ref={this.textInput} name="upload" id="upload" className="upload-box" placeholder="Upload File" onChange={() => this.handleFileChange(listData)} accept=".jpg, .jpeg, .png" />
         </div>
         <button onClick={() => this.addData()} type="button" class="btn btn-outline-success">Add Data</button>
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative'}}>
           <div style={{ position: 'absolute' }}>
-            <img src={imageURL} alt="imageURL" />
+            <img src={imageURL} alt="imageURL" width="300px" height="300px" />
           </div>
           {!!drawBox ? drawBox : null}
         </div>
