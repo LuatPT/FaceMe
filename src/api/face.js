@@ -29,7 +29,7 @@ export async function getFullFaceDescription(detectItem, inputSize = 512) {
     .withAgeAndGender()
     .withFaceDescriptors();
     
-  const displaySize = { width: 300, height: 300 };
+  const displaySize = { width: 500, height: 500 };
   return faceapi.resizeResults(fullDesc, displaySize);;
 }
 

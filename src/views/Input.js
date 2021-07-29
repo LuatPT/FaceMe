@@ -170,13 +170,14 @@ class Input extends Component {
           <input type="file" ref={this.textInput} name="upload" id="upload" className="upload-box" placeholder="Upload File" onChange={() => this.handleFileChange(listData)} accept=".jpg, .jpeg, .png" />
         </div>
         <button onClick={() => this.addData()} type="button" class="btn btn-outline-success">Add Data</button>
-        <div style={{ position: 'relative'}}>
-          <div style={{ position: 'absolute' }}>
-            <img src={imageURL} alt="imageURL" width="300px" height="300px" />
+        <div className="imageWrapper">
+          <div style={{ position: 'relative'}}>
+            <div style={{ position: 'absolute' }}>
+              <img src={imageURL} alt="imageURL" width="500px" height="500px" />
+            </div>
+            {!!drawBox ? drawBox : null}
           </div>
-          {!!drawBox ? drawBox : null}
         </div>
-
       </div>
     );
   }
