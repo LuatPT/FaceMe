@@ -1,6 +1,5 @@
 import axios from 'axios';
-export const addDataAction = (obj) => {
-  console.log(obj);
+const addDataAction = (obj) => {
   return (dispatch) => {
     axios
       .post('http://localhost:3002/api/v1/inputdata', obj)
@@ -15,3 +14,4 @@ const addData = (message) => ({
   type: 'ADD_DATA',
   message,
 });
+export default addDataAction

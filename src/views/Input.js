@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { loadModels, getFullFaceDescription } from '../api/face';
 
+const inputSize = 512;
+const isVideo = false;
 
 // Initial State
 const INIT_STATE = {
@@ -23,15 +25,15 @@ class Input extends Component {
   }
 
   componentWillMount = async () => {
-    const { getData } = this.props;
+    const { getDataAction } = this.props;
     //Load model first ready to detect
-    await getData.getDataAction();
+    await getDataAction();
     await loadModels();
 
   };
 
   addData = () => {
-    const { addData, updateData } = this.props;
+    const { addDataAction, updateDataAction } = this.props;
     const list = Object.values(this.state.listData);
     var desc = this.state.fullDesc[0].descriptor;
     var name = this.state.name;
@@ -61,9 +63,9 @@ class Input extends Component {
 
       })
       if (isUpdate === true) {
-        updateData.updateDataAction({ name: nameUpdate, descriptor: desc.toString(), position: positionUpdateMe, oldDesc: oldDesc })
+        updateDataAction({ name: nameUpdate, descriptor: desc.toString(), position: positionUpdateMe, oldDesc: oldDesc })
       } else {
-        addData.addDataAction({ name: name, descriptor: desc.toString() });
+        addDataAction({ name: name, descriptor: desc.toString() });
         // Insert data to db
       }
     }
@@ -75,7 +77,7 @@ class Input extends Component {
   }
   handleImage = async (image = this.state.imageURL) => {
     document.getElementById("loader").style.display = "block";
-    await getFullFaceDescription(image).then(fullDesc => {
+    await getFullFaceDescription(image,inputSize, isVideo).then(fullDesc => {
       if (fullDesc !== null && fullDesc !== undefined && fullDesc.length !== 0) {
         document.getElementById("loader").style.display = "none";
         document.getElementById("myDiv").style.display = "block";
@@ -173,7 +175,7 @@ class Input extends Component {
         <div className="imageWrapper">
           <div style={{ position: 'relative'}}>
             <div style={{ position: 'absolute' }}>
-              <img src={imageURL} alt="imageURL" width="500px" height="500px" />
+              <img src={imageURL} alt="imageURL" width="480px" height="480px" />
             </div>
             {!!drawBox ? drawBox : null}
           </div>

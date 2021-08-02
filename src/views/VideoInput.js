@@ -3,12 +3,10 @@ import { withRouter } from 'react-router-dom';
 import Webcam from 'react-webcam';
 import { loadModels, getFullFaceDescription, createMatcher } from '../api/face';
 
-// Import face profile
-// const JSON_PROFILE = require('../descriptors/bnk48.json');
-
-const WIDTH = 420;
-const HEIGHT = 420;
-const inputSize = 160;
+const WIDTH = 1366;
+const HEIGHT = 480;
+const inputSize = 512;
+const isVideo = true;
 
 function findEmotion(input) {
   var arr = [
@@ -65,34 +63,20 @@ class VideoInput extends Component {
       gender: null
     };
   }
-
-  componentDidMount = () => {
-    const { listDataVideo } = this.props;
-    console.log(listDataVideo);
-  }
   setInputDevice = () => {
     navigator.mediaDevices.enumerateDevices().then(async devices => {
-      let inputDevice = await devices.filter(
-        device => device.kind === 'videoinput'
-      );
+      let inputDevice = await devices.filter(device => device.kind === 'videoinput');
       if (inputDevice.length < 2) {
-        await this.setState({
-          facingMode: 'user'
-        });
+        await this.setState({facingMode: 'user'});
       } else {
-        await this.setState({
-          facingMode: { exact: 'environment' }
-        });
+        await this.setState({facingMode: { exact: 'environment' }});
       }
       this.startCapture();
     });
   };
 
   startCapture = () => {
-
-    this.interval = setInterval(() => {
-      this.capture();
-    }, 1500);
+    this.interval = setInterval(() => {this.capture()}, 1500);
   };
 
   componentWillUnmount() {
@@ -101,10 +85,7 @@ class VideoInput extends Component {
 
   capture = async () => {
     if (!!this.webcam.current) {
-      await getFullFaceDescription(
-        this.webcam.current.getScreenshot(),
-        inputSize
-      ).then(fullDesc => {
+      await getFullFaceDescription(this.webcam.current.getScreenshot(), inputSize, isVideo).then(fullDesc => {
         if (fullDesc !== null && fullDesc !== undefined && fullDesc.length !== 0) {
           var emotionMe = findEmotion(fullDesc[0].expressions)
           // 1 angry
@@ -131,15 +112,29 @@ class VideoInput extends Component {
         this.setState({ match });
       }
     }
+    
+    this.checkInNow();
   };
 
-  startDetectVideo = async (listDataVideo) => {
+  checkInNow = () => {
+     const { match } = this.state;
+     const { addCheckInAction } = this.props;
+     if(match !== null && match.length > 0){
+      var obj = {
+        name: match[0]._label,
+        time_check_in : new Date().toLocaleString(),
+        time_check_out : new Date().toLocaleString(),
+        update_by : "Admin",
+      }
+      addCheckInAction(obj);
+     }
+  }
 
+
+  startDetectVideo = async (listDataVideo) => {
     await loadModels();
     this.setState({ faceMatcher: await createMatcher(listDataVideo) });
     this.setInputDevice();
-
-    console.log(listDataVideo);
   }
   render() {
     const { detections, match, facingMode } = this.state;
@@ -147,11 +142,7 @@ class VideoInput extends Component {
     let videoConstraints = null;
     let camera = '';
     if (!!facingMode) {
-      videoConstraints = {
-        width: WIDTH,
-        height: HEIGHT,
-        facingMode: facingMode
-      };
+      videoConstraints = {width: WIDTH, height: HEIGHT, facingMode: facingMode};
       if (facingMode === 'user') {
         camera = 'Front';
       } else {
@@ -200,23 +191,10 @@ class VideoInput extends Component {
     }
 
     return (
-
-      <div
-        className="Camera"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}
-      >
-        <button onClick={() => this.startDetectVideo(listDataVideo)} type="button" class="btn btn-outline-success">Start Detect</button>
+      <div className="cameraDiv">
+        <button onClick={() => this.startDetectVideo(listDataVideo)} type="button" className="btn btn-outline-success">Start Detect</button>
         <p>Camera: {camera}</p>
-        <div
-          style={{
-            width: WIDTH,
-            height: HEIGHT
-          }}
-        >
+        <div style={{width: WIDTH, height: HEIGHT}} >
           <div style={{ position: 'relative', width: WIDTH }}>
             {!!videoConstraints ? (
               <div style={{ position: 'absolute' }}>

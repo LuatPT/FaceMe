@@ -10,7 +10,7 @@ export async function loadModels() {
   await faceapi.loadAgeGenderModel(MODEL_URL)
 }
 //Detect image
-export async function getFullFaceDescription(detectItem, inputSize = 512) {
+export async function getFullFaceDescription(detectItem, inputSize, isVideo) {
   // tiny_face_detector options
   let scoreThreshold = 0.5;
   const OPTION = new faceapi.TinyFaceDetectorOptions({
@@ -29,8 +29,11 @@ export async function getFullFaceDescription(detectItem, inputSize = 512) {
     .withAgeAndGender()
     .withFaceDescriptors();
     
-  const displaySize = { width: 500, height: 500 };
-  return faceapi.resizeResults(fullDesc, displaySize);;
+  var displaySize = { width: 480, height: 480 };
+  if(isVideo === true){
+    displaySize = { width: 1366 , height: 480 };
+  }
+  return faceapi.resizeResults(fullDesc, displaySize);
 }
 
 const maxDescriptorDistance = 0.5;

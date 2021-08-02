@@ -6,7 +6,7 @@ export default class MyImage extends Component {
     return (
       <div style={{ position: 'relative' }} >
         <div style={{ position: 'absolute' }}>
-          <img id="imgDetect" src={imageURL} alt="imageURL" width="500px" height="500px"/>
+          <img id="imgDetect" src={imageURL} alt="imageURL" width="480px" height="480px"/>
         </div>
         {!!drawBox ? drawBox : null}
       </div>

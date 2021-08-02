@@ -1,5 +1,5 @@
 import axios from 'axios';
-export const getDataAction = () => {
+const getDataAction = () => {
   return (dispatch) => {
     axios
       .get('http://localhost:3002/api/v1/inputdata')
@@ -13,3 +13,4 @@ const getData = (data) => ({
   type: 'GET_DATA',
   data,
 });
+export default getDataAction;

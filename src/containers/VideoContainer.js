@@ -1,12 +1,13 @@
 import { connect } from 'react-redux';
-import * as getData from '../api/action/getDataAction';
-import { bindActionCreators } from 'redux';
+import getDataAction from '../api/action/getDataAction';
+import addCheckInAction from '../api/action/addCheckInAction';
 import VideoDetect from '../views/VideoDetect';
 
 const mapStateToProps = (state) => ({
   listDataVideo: state.listData,
 });
 const mapDispatchToProp = (dispatch) => ({
-  getDataVideo: bindActionCreators(getData, dispatch),
+  getDataAction: () => dispatch(getDataAction()),
+  addCheckInAction: (obj) => dispatch(addCheckInAction(obj))
 });
 export default connect(mapStateToProps, mapDispatchToProp)(VideoDetect);

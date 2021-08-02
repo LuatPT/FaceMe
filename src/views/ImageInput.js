@@ -3,13 +3,8 @@ import { withRouter } from 'react-router-dom';
 import { loadModels, getFullFaceDescription, createMatcher } from '../api/face';
 import MyImage from './MyImage';
 
-
-// Import image to test API
-// const testImg = require('../img/test.jpg');
-
-// Import face profile
-// const JSON_PROFILE = require('../descriptors/bnk48.json');
-
+const inputSize = 512;
+const isVideo = false;
 // Initial State
 const INIT_STATE = {
   imageURL: "",
@@ -91,8 +86,7 @@ class ImageInput extends Component {
     //Dispplay loading
     document.getElementById("loader").style.display = "block";
 
-    await getFullFaceDescription(image).then(fullDesc => {
-      console.log(fullDesc);
+    await getFullFaceDescription(image,inputSize, isVideo).then(fullDesc => {
       if (fullDesc !== null && fullDesc !== undefined && fullDesc.length !== 0) {
         document.getElementById("loader").style.display = "none";
         document.getElementById("myDiv").style.display = "block";
@@ -151,10 +145,7 @@ class ImageInput extends Component {
         return (
           <div key={i} >
             <div
-              style={{
-                position: 'absolute',
-                border: 'solid',
-                borderColor: 'blue',
+              style={{ position: 'absolute', border: 'solid', borderColor: 'blue',
                 height: _H,
                 width: _W,
                 transform: `translate(${_X}px,${_Y}px)`
@@ -163,33 +154,21 @@ class ImageInput extends Component {
               {!!match ? (
                 <div>
                   <p
-                    style={{
-                      backgroundColor: 'blue',
-                      border: 'solid',
-                      borderColor: 'blue',
+                    style={{ backgroundColor: 'blue', border: 'solid', borderColor: 'blue', marginTop: 0, color: '#fff',
                       width: _W,
-                      marginTop: 0,
-                      color: '#fff',
                       transform: `translate(-3px,${_H}px)`
                     }}
                   >
                     {match[i]._label}-{Math.floor(this.state.age)} tuổi-{this.state.gender}-{this.state.emotion}
                   </p>
                 </div>
-
               ) : <p
-                    style={{
-                      backgroundColor: 'blue',
-                      border: 'solid',
-                      borderColor: 'blue',
+                    style={{ backgroundColor: 'blue', border: 'solid',borderColor: 'blue', marginTop: 0,color: '#fff',
                       width: _W,
-                      marginTop: 0,
-                      color: '#fff',
                       transform: `translate(-3px,${_H}px)`
                     }}
                   >OK deo co gi</p>}
             </div>
-
           </div>
         );
       });
@@ -197,20 +176,21 @@ class ImageInput extends Component {
 
     return (
       <div>
-
+        {/* Loading process */}
         <div id="loader">Loading</div>
         <div id="myDiv" className="animate-bottom">
           <h2>Tada!</h2>
           <p>Loading Complete 100%!!!</p>
         </div>
         <h2>{this.state.errorStatus === true ? "The imported images must be of good resolution " : ""}</h2>
+
+        {/* Main process */}
         <input type="text" ref={this.url} placeholder="Type your url..." />
         <button type="button" className="btn btn-outline-success" onClick={() => this.changeInput(listData)}>Display Image</button>
         <div className="button-wrapper">
-          <span className="label">
-            Upload File
-          </span>
-          <input type="file" ref={this.textInput} name="upload" id="upload" className="upload-box" placeholder="Upload File" onChange={() => this.handleFileChange(listData)} accept=".jpg, .jpeg, .png" />
+          <span className="label"> Upload File</span>
+          <input type="file"  name="upload" id="upload" className="upload-box" placeholder="Upload File"
+           onChange={() => this.handleFileChange(listData)} ref={this.textInput} accept=".jpg, .jpeg, .png"/>
         </div>
 
         <div className="imageWrapper">
