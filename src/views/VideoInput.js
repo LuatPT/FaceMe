@@ -122,8 +122,8 @@ class VideoInput extends Component {
      if(match !== null && match.length > 0){
       var obj = {
         name: match[0]._label,
-        time_check_in : new Date().toLocaleString(),
-        time_check_out : new Date().toLocaleString(),
+        time_check_in : new Date(),
+        time_check_out : new Date(),
         update_by : "Admin",
       }
       addCheckInAction(obj);
@@ -137,6 +137,7 @@ class VideoInput extends Component {
     this.setInputDevice();
   }
   render() {
+    console.log(new Date());
     const { detections, match, facingMode } = this.state;
     const { listDataVideo } = this.props;
     let videoConstraints = null;
