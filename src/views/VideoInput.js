@@ -63,6 +63,10 @@ class VideoInput extends Component {
       gender: null
     };
   }
+  componentDidMount = () => {
+    this.props.getcheckInListAction();
+  }
+
   setInputDevice = () => {
     navigator.mediaDevices.enumerateDevices().then(async devices => {
       let inputDevice = await devices.filter(device => device.kind === 'videoinput');
@@ -116,18 +120,21 @@ class VideoInput extends Component {
     this.checkInNow();
   };
 
-  checkInNow = () => {
+  checkInNow = async() => {
      const { match } = this.state;
-     const { addCheckInAction } = this.props;
-     if(match !== null && match.length > 0){
+     const { addCheckInAction, listCheckIn } = this.props;
+     await this.props.getcheckInListAction();
+     if(match !== null && match.length > 0 && listCheckIn.length >= 0){
       var obj = {
         name: match[0]._label,
-        time_check_in : new Date(),
-        time_check_out : new Date(),
+        time_check_in : new Date().toLocaleString(),
+        time_check_out : new Date().toLocaleString(),
         update_by : "Admin",
       }
-      addCheckInAction(obj);
-     }
+      if(listCheckIn.length === 0 || listCheckIn.filter(e=> e.name === match[0]._label).length === 0 ){
+        addCheckInAction(obj);
+      }
+    }
   }
 
 
@@ -137,9 +144,8 @@ class VideoInput extends Component {
     this.setInputDevice();
   }
   render() {
-    console.log(new Date());
     const { detections, match, facingMode } = this.state;
-    const { listDataVideo } = this.props;
+    const { listDataVideo, listCheckIn } = this.props;
     let videoConstraints = null;
     let camera = '';
     if (!!facingMode) {
@@ -212,8 +218,42 @@ class VideoInput extends Component {
             {!!drawBox ? drawBox : null}
           </div>
         </div>
+        <div>
+          <div className="row">
+            <div className="col-12">
+            <table className="table table-image">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  {/* <th scope="col">Image</th> */}
+                  <th scope="col">Name</th>
+                  <th scope="col">Check In</th>
+                  <th scope="col">Check Out</th>
+                  <th scope="col">Update By</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {listCheckIn.length> 0 ? listCheckIn.map((e,key)=> (
+                  <tr key={key}>
+                    <th scope="row">{e.id}</th>
+                    <td className="w-25">
+                      {/* <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/sheep-3.jpg" className="img-fluid img-thumbnail" alt="Sheep"/> */}
+                    </td>
+                    <td>{e.name}</td>
+                    <td>{e.time_check_in}</td>
+                    <td>{e.time_check_out}</td>
+                    <td>{e.update_by}</td>
+                  </tr>
+                  )): (<tr><th scope="row">Loading...</th></tr>)
+                  }
+              </tbody>
+            </table>   
+            </div>
+          </div>
+        </div>
       </div>
     );
+    
   }
 }
 

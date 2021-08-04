@@ -7,10 +7,9 @@ class VideoDetect extends Component {
   }
 
   render() {
-    const { listDataVideo,addCheckInAction } = this.props;
+    const { listDataVideo,addCheckInAction, getcheckInListAction, listCheckIn } = this.props;
     return (
-      <VideoInput listDataVideo={listDataVideo} addCheckInAction={addCheckInAction} />
-
+      <VideoInput listDataVideo={listDataVideo} listCheckIn ={listCheckIn} addCheckInAction={addCheckInAction} getcheckInListAction={getcheckInListAction}/>
     );
   }
 }
